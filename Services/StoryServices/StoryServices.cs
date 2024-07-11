@@ -105,12 +105,6 @@ namespace ZahimarProject.Services.StoryServices
                 SoundPath = await ImageHelper.SaveImageAsync(storyFormfileDTO.StorySoundPath),
                 StoryQuestionAndAnswers = new List<StoryQuestionAndAnswer>()
 
-                //StoryQuestionAndAnswers = storyFormfileDTO.StoryTestAnswerQuestions.Select(q => new StoryQuestionAndAnswer
-                //{
-                //    Question = q.StoryQuestion,
-                //    CorrectAnswer = q.StoryCorrectAnswer,
-                //    Answers = q.StoryAnswers
-                //}).ToList()
             };
 
             return test;
@@ -142,14 +136,7 @@ namespace ZahimarProject.Services.StoryServices
             storytest.SoundPath = await ImageHelper.SaveImageAsync(storyFormfileDTO.StorySoundPath);
 
 
-            //storytest.StoryQuestionAndAnswers = storyFormfileDTO.StoryTestAnswerQuestions.Select(q => new StoryQuestionAndAnswer
-            //{
-            //    CorrectAnswer = q.StoryCorrectAnswer,
-            //    Question = q.StoryQuestion,
-            //    Answers = q.StoryAnswers,
-
-
-            //}).ToList();
+           
 
 
             return storytest;
@@ -171,7 +158,6 @@ namespace ZahimarProject.Services.StoryServices
                 {
                     foreach (var patientStoryAnswer in patientStoryAnswers)
                     {
-                        //StoryQuestionAndAnswer storyAnswerQuestions = storyRepository.StoryAnswer(question.Id);
 
                         string patientAnswer = patientStoryAnswer.StoryAnswer;
                         string rightAnswer = question.CorrectAnswer;
@@ -190,15 +176,7 @@ namespace ZahimarProject.Services.StoryServices
                 return score;
 
 
-                //var result = new PatientStoryTest
-                //{
-                //    PatientId = patientId,
-                //    StoryTestId = StorytestId,
-                //    Score = score,
-                //};
-
-
-                //return result;
+              
             }
         }
 

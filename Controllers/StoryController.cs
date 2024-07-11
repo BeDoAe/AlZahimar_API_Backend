@@ -253,7 +253,7 @@ namespace ZahimarProject.Controllers
         {
             ClaimsPrincipal user = this.User;
             string LoggedInUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Patient patient = unitOfWork?.PatientRepository.GetPatient(LoggedInUserId);
+            Patient patient = unitOfWork.PatientRepository.GetPatient(LoggedInUserId);
             int score = unitOfWork.StoryServices.EvaluateTest(patient.Id, storytestId, patientStoryAnswers);
 
             if (score == -1)

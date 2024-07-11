@@ -10,6 +10,7 @@ using ZahimarProject.Models;
 
 namespace ZahimarProject.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class TestController : ControllerBase
@@ -29,17 +30,7 @@ namespace ZahimarProject.Controllers
         {
             ClaimsPrincipal user = this.User;
             string loggedInUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //Patient patient = unitOfWork.PatientRepository.GetPatient(loggedInUserId);
 
-
-            //if (patient == null)
-            //{
-            //    return new GeneralResponse()
-            //    {
-            //        IsSuccess = false,
-            //        Data = NotFound("Not user Found")
-            //    };
-            //}
             List<TestInfoDto> TestinfoDTOs = unitOfWork.TestService.GetAllTestInfo();
 
 
@@ -64,7 +55,7 @@ namespace ZahimarProject.Controllers
 
         [HttpGet]
         [Authorize(policy: UserRoles.Relative)]
-        public ActionResult<dynamic>  GetTestsOfPatient()
+        public ActionResult<dynamic> GetTestsOfPatient()
         {
             ClaimsPrincipal user = this.User;
             string loggedInUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -73,9 +64,10 @@ namespace ZahimarProject.Controllers
 
             if (patient == null)
             {
-               return new GeneralResponse(){
-                   IsSuccess = false,
-                   Data = NotFound("Not Found")
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = NotFound("Not Found")
                 };
             }
 
@@ -126,10 +118,10 @@ namespace ZahimarProject.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult<dynamic> AddTest(AddTestDTO testDTO)
         {
-           Test test= unitOfWork.TestService.AddTestDTO(testDTO);
-            if(testDTO == null)
+            Test test = unitOfWork.TestService.AddTestDTO(testDTO);
+            if (testDTO == null)
             {
-                return new GeneralResponse() { Data = NotFound("Not Found"), IsSuccess=false };
+                return new GeneralResponse() { Data = NotFound("Not Found"), IsSuccess = false };
             }
             if (test == null)
             {
@@ -148,17 +140,17 @@ namespace ZahimarProject.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult<dynamic> UpdateTest(int testId, AddTestDTO testDTO)
         {
-            Test test = unitOfWork.TestRepository.Get(t=>t.Id== testId);
+            Test test = unitOfWork.TestRepository.Get(t => t.Id == testId);
             if (test == null)
             {
                 return new GeneralResponse() { Data = NotFound("Not Found"), IsSuccess = false };
             }
-            Test Updatedtest = unitOfWork.TestService.UpdateTestDTO(test,testDTO);
+            Test Updatedtest = unitOfWork.TestService.UpdateTestDTO(test, testDTO);
             if (testDTO == null)
             {
                 return new GeneralResponse() { Data = NotFound("Not Found"), IsSuccess = false };
             }
-         
+
             unitOfWork.TestRepository.Update(test);
             unitOfWork.Save();
             return new GeneralResponse()
@@ -173,8 +165,8 @@ namespace ZahimarProject.Controllers
         public ActionResult<dynamic> DeleteTest(int testId)
         {
 
-            Test test = unitOfWork.TestRepository.Get(t=>t.Id== testId);
-            if(test == null)
+            Test test = unitOfWork.TestRepository.Get(t => t.Id == testId);
+            if (test == null)
             {
                 return new GeneralResponse()
                 {
@@ -183,7 +175,7 @@ namespace ZahimarProject.Controllers
                 };
             }
 
-           
+
             test.IsDeleted = true;
             unitOfWork.TestRepository.Delete(test);
             unitOfWork.Save();
@@ -197,33 +189,34 @@ namespace ZahimarProject.Controllers
 
         [Authorize(policy: UserRoles.Relative)]
         [HttpPost("submitTest")]
-        public ActionResult<dynamic> SubmitTest( int testId, List<PatientAnswerDTO> patientAnswers)
+        public ActionResult<dynamic> SubmitTest(int testId, List<PatientAnswerDTO> patientAnswers)
         {
             ClaimsPrincipal user = this.User;
             string LoggedInUserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Patient patient = unitOfWork.PatientRepository.GetPatient(LoggedInUserId);
+            ResultOfTestDTO result = unitOfWork.TestService.EvaluateTest(patient.Id, testId, patientAnswers, patient.FirstName + " " + patient.LastName);
 
-            ResultOfTestDTO result = unitOfWork.TestService.EvaluateTest(patient.Id, testId, patientAnswers,patient.FirstName+" "+patient.LastName);
-
-            if(result == null)
+            if (result == null)
             {
+
+
                 return new GeneralResponse()
                 {
                     IsSuccess = false,
                     Data = NotFound("Not Found")
                 };
             }
-            
+
             unitOfWork.Save();
             return new GeneralResponse()
             {
                 IsSuccess = true,
                 Data = result
             };
+
         }
 
         [HttpGet("ReviewTest")]
-
         public ActionResult<GeneralResponse> TestReview()
         {
 

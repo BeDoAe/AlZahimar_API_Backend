@@ -17,13 +17,16 @@ namespace ZahimarProject.Services.TestService
     {
         private readonly ITestRepository testRepository;
         private readonly IPatientTestRepository patientTestRepository;
+        private readonly Context context;
 
 
 
-        public TestService(ITestRepository testRepository, IPatientTestRepository patientTestRepository)
+        public TestService(ITestRepository testRepository, IPatientTestRepository patientTestRepository, Context context)
         {
             this.testRepository = testRepository;
             this.patientTestRepository = patientTestRepository;
+            this.context = context;
+
         }
 
 
@@ -129,49 +132,7 @@ namespace ZahimarProject.Services.TestService
         }
 
 
-        //public ResultOfTestDTO EvaluateTest(int patientId, int testId, List<PatientAnswerDTO> patientAnswers)
-        //{
-        //    Test test = testRepository.Get(t => t.Id == testId);
-
-        //    if (test == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    int score = 0;
-
-        //    foreach (var question in test.TestAnswerQuestions)
-        //    {
-        //        var patientAnswer = patientAnswers.FirstOrDefault(a => a.QuestionId == question.ID);
-
-        //        if (patientAnswer != null&& patientAnswer.Answer == question.CorrectAnswer)
-        //        {
-        //           score++;
-        //        }
-        //    }
-
-        //    PatientTest patientTest = new PatientTest()
-        //    {
-        //        DateTaken = DateTime.Now,
-        //        PatientId = patientId,
-        //        Score = score,
-        //        TestId = testId,
-
-        //    };
-        //    patientTestRepository.Insert(patientTest);
-
-        //    var result = new ResultOfTestDTO
-        //    {
-        //        TestScore = test.Degree,
-        //        PatientScore=score,
-        //        TestTitle = test.Title,
-        //        DateTaken = DateTime.Now,
-        //        PatientName="Mohammed Ali",
-        //        TestAnswers=test.TestAnswerQuestions,
-        //        patientAnswers=patientAnswers
-        //    };
-        //    return result;
-        //}
+       
 
         public ResultOfTestDTO EvaluateTest(int patientId, int testId, List<PatientAnswerDTO> patientAnswers,string PatientName)
         {
@@ -181,7 +142,7 @@ namespace ZahimarProject.Services.TestService
             {
                 return null;
             }
-
+            PatientTest patientTest = testRepository.PatientTest(patientId, testId);
             int score = 0;
             Dictionary<string, string> patientAnswerMap = new Dictionary<string, string>();
             Dictionary<string, string> testAnswerMap = new Dictionary<string, string>();
@@ -207,14 +168,9 @@ namespace ZahimarProject.Services.TestService
                 }
             }
 
-            PatientTest patientTest = new PatientTest()
-            {
-                DateTaken = DateTime.Now,
-                PatientId = patientId,
-                Score = score,
-                TestId = testId,
-            };
-            patientTestRepository.Insert(patientTest);
+           
+            patientTest.Score = score;  
+            context.SaveChanges();
 
             var result = new ResultOfTestDTO
             {
@@ -256,7 +212,7 @@ namespace ZahimarProject.Services.TestService
 
                             if (score <= test.Degree)
                             {
-                                score += 10;
+                                score += 1;
                                 //question.isCorrected = true;
                             }
                         }
@@ -264,16 +220,6 @@ namespace ZahimarProject.Services.TestService
                 }
                 return score;
 
-
-                //var result = new PatientStoryTest
-                //{
-                //    PatientId = patientId,
-                //    StoryTestId = StorytestId,
-                //    Score = score,
-                //};
-
-
-                //return result;
             }
         }
 
