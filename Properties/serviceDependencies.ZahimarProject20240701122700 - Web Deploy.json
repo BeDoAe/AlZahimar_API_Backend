@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/ZahimarProject20240701122700/providers/Microsoft.ServiceLinker/linkers/ConnectionStringscs_4FC6BC1856",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/zahimarprojectdbserver/databases/ZahimarProject_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:cs",
+      "dynamicId": null
+    }
+  }
+}

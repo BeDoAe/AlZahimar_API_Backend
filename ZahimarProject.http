@@ -1,0 +1,6 @@
+@ZahimarProject_HostAddress = http://localhost:5221
+
+GET {{ZahimarProject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
